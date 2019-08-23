@@ -84,6 +84,38 @@ exports.noteArchive = (req, res) => {
     })
 }
 
+exports.noteUnArchive = (req, res) => {
+    //data required to archive the note
+    data = {
+        "email": req.body.payload.email,
+        "title": req.body.title,
+        "description":req.body.description
+    }
+    //calling the service to archive the note
+    noteService.noteUnArchive(data, (err, result) => {
+
+        //if error in the service
+        if (err) {
+            let response = {
+                "status": 500,
+                "msg": "not able to archive",
+                "data": err
+            }
+            console.log(err);
+            res.send(response);
+        }
+        // if no error in the service
+        else {
+            let response = {
+                "status": 200,
+                "msg": "archived sucessfully",
+                "data": result
+            }
+            console.log(result);
+            res.send(response);
+        }
+    })
+}
 
 exports.pin = (req, res) => {
     //data required to archive the note
@@ -228,7 +260,7 @@ exports.restore = (req, res) => {
                 msg: "restored sucessfully",
                 error: result
             }
-            console.log(result + "in controller");
+            console.log(result + " in controller "+result);
             res.send(response);
         }
     })
@@ -424,6 +456,34 @@ exports.getAllArchive = (req, res) => {
             }
             console.log(result);
             res.send(response);
+        }
+    })
+}
+
+exports.updateNote=(req,res)=>{
+    noteData={
+        "id":req.body._id,
+        "title":req.body.title,
+        "description":req.body.description
+    };
+    noteService.updateNote(noteData,(err,result)=>{
+        if(err){
+            console.log("error in update note==>",err);
+            let response={
+                "status":500,
+                "msg":"error in updating",
+        
+            }
+            res.send(response);
+        }
+        else{
+            console.log("result of updating note===>",result);
+           let response={
+               "status":200,
+               "msg":"update sucessfull",
+               "data":result
+           }
+           res.send(response); 
         }
     })
 }

@@ -81,7 +81,7 @@ router.route('/addNote').post(auth.authentication, noteController.addNote);
 router.route('/archive').post(auth.authentication, noteController.noteArchive);
 
 //this route used to unarchive the note
-// router.route('/unarchive').post(auth.authentication,noteController)
+router.route('/unarchive').post(auth.authentication,noteController.noteUnArchive)
 
 //this route used to delete the note
 router.route('/deleteNote').post(auth.authentication, noteController.noteDelete);
@@ -114,7 +114,7 @@ router.route('/getAllDelete').get(auth.authentication, noteController.getAllDele
 //this route is used to delete the note permentaly 
 router.route('/delete').post(auth.authentication,noteController.delete);
 
-
+router.route('/updateNote').post(auth.authentication,noteController.updateNote);
 /**
  * these routes used to operate with the label
  */

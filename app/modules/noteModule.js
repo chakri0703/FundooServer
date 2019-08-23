@@ -195,6 +195,61 @@ class NoteModules {
 
     }
 
+
+
+    noteUnArchive(body, callback) {
+
+        //finding the note to archive by email and title
+        note.findOne({ "email": body.email, "title": body.title },
+            (err, result) => {
+                // if getting while updating
+                if (err) {
+                    console.log(err);
+                    return callback(err, result);
+                }
+                else {
+                    //is rresult is not empty
+                    if (result) {
+                        //  console.log(result);
+                        //is it is not archived it is false
+                        if (result.isArchive === true) {
+                            //upadte isArchiv to true
+                            note.updateOne({ "email": result.email, "title": result.title }, { $set: { "isArchive": false } }, (error, res) => {
+                                //any error while updating
+                                if (error) {
+                                    //if error are while  updataing 
+                                    console.log(error);
+                                    return callback(error, result)
+                                }
+
+                                else {
+                                    //note Archived sucessfully
+                                    console.log("Note UnArchived Sucessfully");
+                                    return callback(null, "Note UnArchived Sucessfully");
+
+                                }
+                            })
+                        }
+
+                        else {
+                            //if isArchive is already then it is updated 
+                            console.log("failed to update to archive");
+                            return callback(null, "Already Note unarchive");
+                        }
+                    }
+
+                    else {
+                        //if email or title are invalid
+                        return callback(null, "email or title invalid");
+
+
+                    }
+                }
+
+            })
+
+    }
+
     /**
      * @function        noteDelete
      * @description     this is the function to delete the note by making the isdelete the 
@@ -238,31 +293,16 @@ class NoteModules {
     restore(body, callback) {
 
 
-        note.findOne({ "email": body.email, "title": body.title }, (err, result) => {
+        note.findOneAndUpdate({ "email": body.email, "title": body.title },{$set:{ "isDeleted": false}}, (err, result) => {
             if (err) {
                 console.log(err);
-                return callback(err, result);
+                return callback(err);
             }
             else {
-                // console.log(result);
-
-                if (result) {
-                    note.updateOne({ "email": result.email }, { $set: { "isDeleted": false } }, (err, res) => {
-                        if (err) {
-                            console.log(err);
-                            return callback(err, result);
-                        }
-                        else {
-                            console.log("updated sucessfully");
-                            return callback(null, "Restored Sucesfully");
-                        }
-                    })
-                }
-                else {
-                    console.log("invalid email or title");
-                    return callback(null, "invalid email or title");
-
-                }
+              
+                console.log("result is===>",result);
+                
+              callback(null,result)
             }
         })
     }
@@ -474,6 +514,18 @@ class NoteModules {
                     }
                 }
             })
+    }
+
+    noteUpdate(noteData,callback){ 
+        note.findOneAndUpdate({_id:noteData.id},{$set: {'title':noteData.title,'description':noteData.description}},(err,result)=>{
+            if(err){
+                console.log("error while updating note in model==>",err);
+                callback(err);
+            }
+            else{
+                callback(null,result);
+            }
+        })
     }
 }
 

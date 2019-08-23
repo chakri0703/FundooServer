@@ -46,6 +46,20 @@ class NoteServices {
         })
     }
 
+    noteUnArchive(data, callback) {
+        //calling the note Module to archive 
+        noteModule.noteUnArchive(data, (err, result) => {
+            if (err) {
+                console.log(err);
+                return callback(err, result)
+            }
+            else {
+                console.log(result);
+                return callback(null, result)
+            }
+        })
+    }
+
     /**
      * @function        noteDelete
      * 
@@ -97,6 +111,8 @@ class NoteServices {
                 return callback(err, result);
             }
             else {
+                console.log("result ===>",result);
+                
                 return callback(null, result)
             }
         })
@@ -216,6 +232,20 @@ class NoteServices {
                 //console.log(result);
                 return callback(err, result);
             }
+        })
+    }
+
+    updateNote(noteData, callback) {
+
+        noteModule.noteUpdate(noteData, (err, result) => {
+            if (err) {
+                console.log("error in update note service==>", err);
+                callback(err);
+            }
+            else {
+                callback(null,result);
+            }
+
         })
     }
 }
